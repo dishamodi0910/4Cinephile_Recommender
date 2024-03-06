@@ -3,6 +3,8 @@ import joblib
 import pandas as pd
 from scipy.sparse import load_npz
 from flask_cors import CORS
+from urllib.parse import quote_plus
+from flask import request
 
 app = Flask(__name__)
 CORS(app)
@@ -18,10 +20,12 @@ index_user = joblib.load('./index_user.pkl')
 movie_index = joblib.load('./movie_index.pkl')
 index_movie = joblib.load('./index_movie.pkl')
 model = joblib.load('./Recommendation_System.sav')
-movie_title = 'Toy Story (1995)'
+movie_title = 'Sabrina (1995)'
 
 @app.route('/recommendations/')
 def get_recommendations(k=11):
+    movie_title = request.args.get('search', '')
+    print("Movie title is : ",movie_title);
     titleofmovie = dict(zip(movie_dataset['title'], movie_dataset['movieId']))
     titleofmovie_new = dict(zip(movie_dataset['movieId'], movie_dataset['title']))
     movie_id = titleofmovie[movie_title]
@@ -40,4 +44,4 @@ def get_recommendations(k=11):
     return jsonify({'recommendations': nearest_movie_name})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
