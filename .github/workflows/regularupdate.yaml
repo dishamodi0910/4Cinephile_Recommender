@@ -9,28 +9,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      
+      - name: Decrypt Kaggle API Key
+        run: openssl aes-256-cbc -d -in kaggle.json.enc -out kaggle.json -k ${{ secrets.KAGGLE_PASSWORD }}
+        env:
+          KAGGLE_PASSWORD: ${{ secrets.KAGGLE_PASSWORD }}
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
 
-      - name: Copy kaggle.json
-        run: echo "${{ secrets.KAGGLE_JSON }}" > /home/runner/kaggle.json
-  
-      - name: Move kaggle.json to correct location
-        run: mv /home/runner/kaggle.json ~/.kaggle/kaggle.json
-
-      - name: Change permissions of kaggle.json
-        run: chmod 600 ~/.kaggle/kaggle.json
-
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: Create Kaggle directory
+        run: mkdir -p ~/.kaggle
+        
+      - name: Move kaggle.json to correct location
+        run: mv kaggle.json ~/.kaggle/kaggle.json
+
+      - name: Change permissions of kaggle.json
+        run: chmod 600 ~/.kaggle/kaggle.json
 
       - name: Execute Python script
         run: python execute_timely.py
         env:
           MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-
-
