@@ -14,6 +14,15 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Copy kaggle.json
+        run: echo "${{ secrets.KAGGLE_JSON }}" > /home/runner/kaggle.json
+  
+      - name: Move kaggle.json to correct location
+        run: mv /home/runner/kaggle.json ~/.kaggle/kaggle.json
+
+      - name: Change permissions of kaggle.json
+        run: chmod 600 ~/.kaggle/kaggle.json
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -23,3 +32,5 @@ jobs:
         env:
           MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+
+
