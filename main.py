@@ -5,6 +5,7 @@ from scipy.sparse import load_npz
 from flask_cors import CORS
 from urllib.parse import quote_plus
 from flask import request
+import movieposters as mp
 
 app = Flask(__name__)
 CORS(app)
@@ -39,6 +40,8 @@ def get_recommendations(k=11):
         n = neighbour.item(i)
         nearest_k_ids.append(index_movie[n])
         nearest_movie_name.append(titleofmovie_new[index_movie[n]])
+        #link = mp.get_poster(title=titleofmovie_new[index_movie[n]])
+        #print(link);
     nearest_k_ids.pop(0)
     nearest_movie_name.pop(0)
     return jsonify({'recommendations': nearest_movie_name})
