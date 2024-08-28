@@ -54,7 +54,7 @@ def get_upcoming_movies(df):
 # Connect to MongoDB
   client = MongoClient(uri)
   mydb = client["4cinephile"]
-  mycol = mydb["tempdata"]
+  mycol = mydb["tempdatas"]
   current_date = date.today().isoformat()
   sorted_movies = df.sort_values(by='release_date', ascending=False)
   sorted_movies = sorted_movies.dropna()
@@ -82,7 +82,7 @@ def get_movies_count_by_genre(df):
 # Connect to MongoDB
   client = MongoClient(uri)
   mydb = client["4cinephile"]
-  mycol = mydb["tempdata"]
+  mycol = mydb["tempdatas"]
   current_date = date.today().isoformat()
   genre_df = df['genres']
   genre_df.dropna(inplace=True)
